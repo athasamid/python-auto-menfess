@@ -1,0 +1,6 @@
+.env
+sample_data.json
+/venv
+.DS_Store
+/.idea/
+/__pycache__/

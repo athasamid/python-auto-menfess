@@ -3,6 +3,7 @@ import time
 from tweepy import OAuthHandler, API, Stream, StreamListener
 from BotStreamListener import BotStreamListener
 from dotenv import load_dotenv
+#from firebase import firebase
 
 load_dotenv()
 
@@ -16,12 +17,14 @@ if __name__ == '__main__':
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = API(auth)
+
+    #firebase = firebase.FirebaseApplication(os.getenv("FIREBASE_DB_URL"), None)
     listener = BotStreamListener(api=api)
 
     stream = Stream(auth, listener)
-    stream.filter(track=["@bjnfess"])
+    stream.filter(track=[os.getenv("USERNAME")])
 
     while True:
-        api.list_direct_messages()
-
+        msg = api.list_direct_messages()
+        print(msg)
         time.sleep(60 * 1000)

@@ -12,7 +12,7 @@ class BotStreamListener(StreamListener):
         self.quotes = db.quotes
 
     def process_data(self, twitter):
-        user = self.db
+        users = self.db.users
         if any(hashtag['text'] == 'rt' for hashtag in twitter.entities['hashtags']) and twitter.retweeted == False:
             print("found rts")
             if twitter.in_reply_to_status_id is not None:

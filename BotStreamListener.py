@@ -1,10 +1,5 @@
 from tweepy import StreamListener, API, TweepError
-from models.Twitter import Twitter
 from ImageQuotes import ImageQuotes
-import jsonpickle
-from elasticsearch import Elasticsearch
-
-es = Elasticsearch()
 
 
 class BotStreamListener(StreamListener):
@@ -17,7 +12,7 @@ class BotStreamListener(StreamListener):
         self.quotes = db.quotes
 
     def process_data(self, twitter):
-        user = db.t
+        user = self.db
         if any(hashtag['text'] == 'rt' for hashtag in twitter.entities['hashtags']) and twitter.retweeted == False:
             print("found rts")
             if twitter.in_reply_to_status_id is not None:

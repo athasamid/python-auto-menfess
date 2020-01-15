@@ -1,6 +1,5 @@
 import os
 import time
-import requests
 from tweepy import OAuthHandler, API, Stream, StreamListener, AppAuthHandler
 from DMListener import DMListener
 from dotenv import load_dotenv
@@ -21,7 +20,7 @@ if __name__ == '__main__':
     api = API(auth)
     client = MongoClient(os.getenv("MONGO_HOST"))
 
-    db = client.bjnfess
+    db = client[os.getenv("MONGO_DB")]
 
     # response = auth.oauth.request('GET', "https://api.twitter.com/1.1/statuses/home_timeline.json")
     # print(response.headers)

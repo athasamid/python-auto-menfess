@@ -3,7 +3,7 @@ import time
 from tweepy import OAuthHandler, API, Stream, StreamListener
 from BotStreamListener import BotStreamListener
 from dotenv import load_dotenv
-from firebase import firebase
+from pymongo import MongoClient
 
 load_dotenv()
 
@@ -18,8 +18,10 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     api = API(auth, wait_on_rate_limit=True)
 
-    firebase = firebase.FirebaseApplication(os.getenv("FIREBASE_DB_URL"), None)
-    listener = BotStreamListener(api=api, firebase=firebase)
+    client = MongoClient(os.getenv("MONGO_HOST"))
+
+    db = client[os.getenv("MONGO_DB")]
+    listener = BotStreamListener(api=api, db=db)
 
     stream = Stream(auth, listener)
     stream.filter(track=[os.getenv("USERNAME")])

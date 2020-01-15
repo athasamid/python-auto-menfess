@@ -4,18 +4,20 @@ from ImageQuotes import ImageQuotes
 import jsonpickle
 from elasticsearch import Elasticsearch
 
-# from firebase import firebase
-
 es = Elasticsearch()
 
 
 class BotStreamListener(StreamListener):
 
-    def __init__(self, api: API):
+    def __init__(self, api: API, db):
         self.api = api
-        # self.firebase = firebase
+        self.db = db
+        self.user_model = db.users
+        self.tweet = db.tweet
+        self.quotes = db.quotes
 
     def process_data(self, twitter):
+        user = db.t
         if any(hashtag['text'] == 'rt' for hashtag in twitter.entities['hashtags']) and twitter.retweeted == False:
             print("found rts")
             if twitter.in_reply_to_status_id is not None:

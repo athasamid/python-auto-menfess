@@ -20,7 +20,7 @@ class DMListener(object):
                 self.save_user(dm.message_create["sender_id"])
                 self.dbdm.insert_one(self.set_dms(dm))
                 self.check_tweet(dm)
-                print(dm.id_str)
+                print(dm)
 
     def check_tweet(self, dm):
         if dm.message_create['message_data']['text'].lower().startswith(self.trigger.lower()):

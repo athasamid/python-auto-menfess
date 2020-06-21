@@ -20,7 +20,7 @@ client = MongoClient(os.getenv("MONGO_HOST"))
 db = client[os.getenv("MONGO_DB")]
 
 status = api.get_direct_message(id=1274766998874931204)
-print(status.message_create["sender_id"])
+print(status)
 
 # if db.users.count_documents({'id': me.id}, limit=1) == 0:
 #     print("saving user "+me.id_str)

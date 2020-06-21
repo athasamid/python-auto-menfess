@@ -18,7 +18,7 @@ class DMListener(object):
             getdm = self.dbdm.find_one({'id': dm.id})
             if getdm is None:
                 self.save_user(dm.message_create["sender_id"])
-                self.dbdm.insert_one(dm._json)
+                self.dbdm.insert_one(self.set_dms(dm))
                 self.check_tweet(dm)
                 print(dm.id_str)
 

@@ -23,7 +23,7 @@ if __name__ == '__main__':
     db = client[os.getenv("MONGO_DB")]
     listener = BotStreamListener(api=api, db=db)
 
-    stream = Stream(auth, listener)
+    stream = Stream(auth, listener, verify=False)
     stream.filter(track=[os.getenv("USERNAME").replace("@", "")])
 
     while True:

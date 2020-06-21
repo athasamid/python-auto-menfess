@@ -12,10 +12,10 @@ class ImageQuotes(object):
     def __init__(self, tweet, username):
         self.tweet = tweet
         self.username = username
+        self.dir_path = os.path.dirname(__file__)
 
     def makeImage(self):
-        dir_path = os.path.dirname(__file__)
-        imagelist = glob.glob(dir_path+'/images/img*.jpg')
+        imagelist = glob.glob(self.dir_path+'/images/img*.jpg')
         print(imagelist)
         print(len(imagelist) - 1)
         rand = randint(0, len(imagelist) - 1)
@@ -39,7 +39,7 @@ class ImageQuotes(object):
         message = self.tweet.text
         lines = textwrap.wrap(message, width=50)
 
-        image_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=20)
+        image_font = ImageFont.truetype(self.dir_path+"/fonts/Roboto-Bold.ttf", size=20)
 
         wtext = 0
         for line in lines:
@@ -68,8 +68,8 @@ class ImageQuotes(object):
         return {'path': 'quotes/' + self.tweet.id_str + '.jpg', 'name': self.tweet.id_str + '.jpg'}
 
     def draw_footer(self):
-        logo = Image.open("images/twitter.png")
-        font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=20)
+        logo = Image.open(self.dir_path+"/images/twitter.png")
+        font = ImageFont.truetype(self.dir_path+"/fonts/Roboto-Bold.ttf", size=20)
         name = self.username
 
         logo = logo.resize((20, 20), Image.ANTIALIAS)
@@ -92,7 +92,7 @@ class ImageQuotes(object):
         screenname = '@' + self.tweet.user.screen_name
 
         profile = self.draw_profile_image(img_url=self.tweet.user.profile_image_url.replace('_normal', ''), width=width, height=height)
-        user_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=20)
+        user_font = ImageFont.truetype(self.dir_path+"/fonts/Roboto-Bold.ttf", size=20)
 
         print(profile.size)
 

@@ -24,4 +24,4 @@ if __name__ == '__main__':
     listener = BotStreamListener(api=api, db=db)
 
     stream = Stream(auth, listener, verify=False)
-    stream.filter(follow=[os.getenv("USER_ID")])
+    stream.filter(track=[os.getenv("USERNAME")])

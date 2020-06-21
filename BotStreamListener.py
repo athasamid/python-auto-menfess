@@ -12,6 +12,7 @@ class BotStreamListener(StreamListener):
         self.quotes = db.quotes
 
     def process_data(self, twitter):
+        print(twitter)
         self.save_user(twitter.user)
         if any(hashtag['text'] == 'rt' for hashtag in twitter.entities['hashtags']) and twitter.retweeted == False:
             print("found rts")

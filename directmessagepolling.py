@@ -1,6 +1,6 @@
 import os
 import time
-from tweepy import OAuthHandler, API, Stream, StreamListener, AppAuthHandler
+from tweepy import OAuthHandler, API, Stream, StreamListener, AppAuthHandler, TweepError
 from DMListener import DMListener
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -19,7 +19,7 @@ keys = {
 if __name__ == '__main__':
     auth = OAuthHandler(keys['consumer_key'], keys['consumer_secret'])
     auth.set_access_token(keys['access_token'], keys['access_token_secret'])
-    api = API(auth)
+    api = API(auth, wait_on_rate_limit=True)
     client = MongoClient(os.getenv("MONGO_HOST"))
 
     db = client[os.getenv("MONGO_DB")]

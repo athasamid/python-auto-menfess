@@ -1,6 +1,7 @@
 from tweepy import OAuthHandler, API, Stream, StreamListener
 from dotenv import load_dotenv
 import os
+import glob
 
 load_dotenv()
 
@@ -19,8 +20,11 @@ api = API(auth, wait_on_rate_limit=True)
 client = MongoClient(os.getenv("MONGO_HOST"))
 db = client[os.getenv("MONGO_DB")]
 
-status = api.get_direct_message(id=1274766998874931204)
-print(status)
+# status = api.get_direct_message(id=1274766998874931204)
+# print(status)
+
+list = glob.glob("images/img*.jpg")
+print(len(list))
 
 # if db.users.count_documents({'id': me.id}, limit=1) == 0:
 #     print("saving user "+me.id_str)

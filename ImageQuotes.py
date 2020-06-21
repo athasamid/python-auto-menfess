@@ -12,7 +12,7 @@ class ImageQuotes(object):
         self.username = username
 
     def makeImage(self):
-        imagelist = glob.glob('images/*.jpg')
+        imagelist = glob.glob('images/img*.jpg')
 
         image = Image.open(imagelist[randint(0, len(imagelist) - 1)])
         draw = ImageDraw.Draw(image)

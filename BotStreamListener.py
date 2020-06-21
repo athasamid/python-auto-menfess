@@ -38,7 +38,7 @@ class BotStreamListener(StreamListener):
             image_quotes = ImageQuotes(data, username='@' + me.screen_name)
             image_quotes.makeImage()
             dir_path = os.path.dirname(__file__)
-            media = self.api.media_upload(filename='quotes/' + data.id_str + '.jpg')
+            media = self.api.media_upload(filename=dir_path+'/quotes/' + data.id_str + '.jpg')
             print(media)
             print(in_reply_to_status_id)
             updated_status = self.api.update_status(media_ids=[media.media_id], in_reply_to_status_id=in_reply_to_status_id,

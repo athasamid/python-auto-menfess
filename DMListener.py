@@ -1,7 +1,5 @@
-from tweepy import StreamListener, API, TweepError
 from requests_oauthlib import OAuth1Session
-from PIL import Image, ImageFont, ImageDraw
-import requests
+from tweepy import API
 
 
 class DMListener(object):
@@ -18,6 +16,7 @@ class DMListener(object):
             getdm = self.dbdm.find_one({'id': dm.id})
             if getdm is None:
                 print("Inserting new Data")
+                print(dm)
                 self.dbdm.insert_one(self.set_dms(dm))
                 self.check_tweet(dm)
 
@@ -47,7 +46,9 @@ class DMListener(object):
                     url = i['expanded_url'] if (
                                 dm.message_create['message_data']['attachment']['media']['url'] != i['url']) else None
 
-            self.api.update_status(status=status, attachment_url=url, media_ids=id_media)
+            updated_status = self.api.update_status(status=status, attachment_url=url, media_ids=id_media)
+            self.db.statuses.insert_one(self.set_status(updated_status, dm.id))
+            self.api.send_direct_message(recipient_id=dm.message_create['sender_id'], text="Request anda telah di terbitkan.\nSilahkan cek disini: https://twitter.com/"+self.keys['username'].replace('@', '')+"/status/"+updated_status.id_str)
 
     def download_and_upload_media(self, url, dm_id):
         tw = OAuth1Session(self.keys['consumer_key'], self.keys['consumer_secret'], self.keys['access_token'], self.keys['access_token_secret'])
@@ -68,4 +69,14 @@ class DMListener(object):
             'created_timestamp': dm.created_timestamp,
             'type': dm.type,
             'message_create': dm.message_create
+        }
+
+    def set_status(self, status, id_dm):
+        return {
+            'id': status.id,
+            'id_dm': id_dm,
+            'created_at': status.created_at,
+            'text': status.text,
+            'entities': status.entities,
+            'in_reply_to_status_id': status.in_reply_to_status_id
         }

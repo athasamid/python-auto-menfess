@@ -11,7 +11,9 @@ keys = {
     'consumer_key': os.getenv("CONSUMER_KEY"),
     'consumer_secret': os.getenv("CONSUMER_SECRET"),
     'access_token': os.getenv("ACCESS_TOKEN"),
-    'access_token_secret': os.getenv("ACCESS_TOKEN_SECRET")
+    'access_token_secret': os.getenv("ACCESS_TOKEN_SECRET"),
+    'username': os.getenv('USERNAME'),
+    'trigger': os.getenv("TRIGGER")
 }
 
 if __name__ == '__main__':
@@ -22,18 +24,9 @@ if __name__ == '__main__':
 
     db = client[os.getenv("MONGO_DB")]
 
-    # response = auth.oauth.request('GET', "https://api.twitter.com/1.1/statuses/home_timeline.json")
-    # print(response.headers)
-    # print(response.content)
-    # print(response.status_code)
-    # with open('imgdm/743563732375113732.jpg', 'wb') as out_file:
-    #     out_file.write(response.content)
-
-    # media = self.api.media_upload(filename='imgdm/743563732375113732.jpg')
-
     while True:
+        print("Check dm")
         msg = api.list_direct_messages()
-        print(msg)
         dmlistener = DMListener(api, msg, db, os.getenv("TRIGGER"), keys)
         dmlistener.process_dm()
         time.sleep(60 * 5)

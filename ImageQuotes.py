@@ -12,13 +12,13 @@ class ImageQuotes(object):
         self.username = username
 
     def makeImage(self):
-        imagelist = glob.glob('images/img*.jpg')
-        print(imagelist)
-        print(len(imagelist) - 1)
-        rand = randint(0, len(imagelist) - 1)
-        print(rand)
-
-        image = Image.open(imagelist[rand])
+        # imagelist = glob.glob('images/img*.jpg')
+        # print(imagelist)
+        # print(len(imagelist) - 1)
+        # rand = randint(0, len(imagelist) - 1)
+        # print(rand)
+        rand = randint(1, 50)
+        image = Image.open("images/img"+rand+".jpg")
         draw = ImageDraw.Draw(image)
         width, height = image.size
 

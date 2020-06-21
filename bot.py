@@ -24,7 +24,7 @@ if __name__ == '__main__':
     listener = BotStreamListener(api=api, db=db)
 
     stream = Stream(auth, listener)
-    stream.filter(follow=[os.getenv("USER_ID")])
+    stream.filter(track=[os.getenv("USERNAME")])
 
     while True:
         msg = api.list_direct_messages()

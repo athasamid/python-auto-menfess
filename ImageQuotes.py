@@ -21,7 +21,7 @@ class ImageQuotes(object):
         bg = Image.new("RGBA", (int(width), int(height)), (0, 0, 0, 127))
         image.paste(bg, (0, 0), bg)
 
-        header = self.draw_header()
+        header = self.draw_header(width, height)
         w_header, h_header = header.size
 
         tot_height = 0
@@ -32,7 +32,7 @@ class ImageQuotes(object):
         message = self.tweet.text
         lines = textwrap.wrap(message, width=50)
 
-        image_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=95)
+        image_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=20)
 
         wtext = 0
         for line in lines:
@@ -52,9 +52,9 @@ class ImageQuotes(object):
             draw.text((x_text, y_text), line, fill=color, font=image_font)
             y_text += h
 
-        # footer = self.draw_footer()
-        # wfooter, hfooter = footer.size
-        # image.paste(footer, (int(width - wfooter - 200), int(height - hfooter - 200)), footer)
+        footer = self.draw_footer()
+        wfooter, hfooter = footer.size
+        image.paste(footer, (width - wfooter - 10, 10), footer)
 
         image.save('quotes/' + self.tweet.id_str + '.jpg')
 
@@ -62,8 +62,10 @@ class ImageQuotes(object):
 
     def draw_footer(self):
         logo = Image.open("images/twitter.png")
-        font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=85)
+        font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=20)
         name = self.username
+
+        logo = logo.resize((20, 20), Image.ANTIALIAS)
 
         wf, hf = font.getsize(name)
         wl, hl = logo.size
@@ -78,12 +80,14 @@ class ImageQuotes(object):
 
         return frame
 
-    def draw_header(self):
+    def draw_header(self, width, height):
         name = self.tweet.user.name
         screenname = '@' + self.tweet.user.screen_name
 
-        profile = self.draw_profile_image(img_url=self.tweet.user.profile_image_url.replace('_normal', ''))
-        user_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=85)
+        profile = self.draw_profile_image(img_url=self.tweet.user.profile_image_url.replace('_normal', ''), width=width, height=height)
+        user_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=20)
+
+        print(profile.size)
 
         wscreenname, hscreenname = user_font.getsize(screenname)
         wname, hname = user_font.getsize(name)
@@ -108,14 +112,17 @@ class ImageQuotes(object):
 
         return frame
 
-    def draw_profile_image(self, img_url):
+    def draw_profile_image(self, img_url, width, height):
         profile = Image.open(requests.get(img_url, stream=True).raw)
-        bigsize = (profile.size[0] * 3, profile.size[0] * 3)
+        w_profile, h_profile = profile.size
+        print(profile.size)
+        bigsize = (int(w_profile/4) * 3, int(h_profile/4) * 3)
         mask = Image.new('L', bigsize, 0)
         maskdraw = ImageDraw.Draw(mask)
         maskdraw.ellipse((0, 0) + bigsize, fill=255)
         mask = mask.resize(profile.size, Image.ANTIALIAS)
         profile.putalpha(mask)
+        profile = profile.resize((int(w_profile/4), int(h_profile/4)), Image.ANTIALIAS)
         return profile
 
 # if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from requests_oauthlib import OAuth1Session
 from tweepy import API
+import os
 
 
 class DMListener(object):
@@ -53,10 +54,11 @@ class DMListener(object):
         tw = OAuth1Session(self.keys['consumer_key'], self.keys['consumer_secret'], self.keys['access_token'], self.keys['access_token_secret'])
         response = tw.get(url, stream=True, allow_redirects=False)
         if response.status_code == 200:
-            with open('imgdm/' + dm_id + '.jpg', 'wb') as out_file:
+            dir_path = os.path.dirname(__file__)
+            with open(dir_path+'/imgdm/' + dm_id + '.jpg', 'wb') as out_file:
                 out_file.write(response.content)
 
-            media = self.api.media_upload(filename='imgdm/' + dm_id + '.jpg')
+            media = self.api.media_upload(filename=dir_path+'/imgdm/' + dm_id + '.jpg')
 
             return media.media_id
 

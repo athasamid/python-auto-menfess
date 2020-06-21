@@ -1,5 +1,6 @@
 from tweepy import StreamListener, API, TweepError
 from ImageQuotes import ImageQuotes
+import os
 
 
 class BotStreamListener(StreamListener):
@@ -36,6 +37,7 @@ class BotStreamListener(StreamListener):
             me = self.get_me()
             image_quotes = ImageQuotes(data, username='@' + me.screen_name)
             image_quotes.makeImage()
+            dir_path = os.path.dirname(__file__)
             media = self.api.media_upload(filename='quotes/' + data.id_str + '.jpg')
             print(media)
             print(in_reply_to_status_id)

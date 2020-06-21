@@ -63,7 +63,7 @@ class ImageQuotes(object):
         wfooter, hfooter = footer.size
         image.paste(footer, (width - wfooter - 10, 10), footer)
 
-        image.save('quotes/' + self.tweet.id_str + '.jpg')
+        image.save(self.dir_path+'/quotes/' + self.tweet.id_str + '.jpg')
 
         return {'path': 'quotes/' + self.tweet.id_str + '.jpg', 'name': self.tweet.id_str + '.jpg'}
 

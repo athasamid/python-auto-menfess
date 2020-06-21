@@ -13,8 +13,11 @@ class ImageQuotes(object):
 
     def makeImage(self):
         imagelist = glob.glob('images/img*.jpg')
+        rand = randint(0, len(imagelist) - 1)
+        print(imagelist)
+        print(rand)
 
-        image = Image.open(imagelist[randint(0, len(imagelist) - 1)])
+        image = Image.open(imagelist[rand])
         draw = ImageDraw.Draw(image)
         width, height = image.size
 

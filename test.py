@@ -26,6 +26,8 @@ db = client[os.getenv("MONGO_DB")]
 
 status = api.get_status(id=1274694009395376129)
 me = api.me()
+print(status)
+print(me)
 image_quotes = ImageQuotes(status, username='@' + me.screen_name)
 image_quotes.makeImage()
 

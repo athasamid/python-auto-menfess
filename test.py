@@ -2,6 +2,7 @@ from tweepy import OAuthHandler, API, Stream, StreamListener
 from dotenv import load_dotenv
 import os
 import glob
+from ImageQuotes import ImageQuotes
 
 load_dotenv()
 
@@ -23,8 +24,10 @@ db = client[os.getenv("MONGO_DB")]
 # status = api.get_direct_message(id=1274766998874931204)
 # print(status)
 
-list = glob.glob("images/img*.jpg")
-print(len(list))
+status = api.get_status(id=1274694009395376129)
+me = api.me()
+image_quotes = ImageQuotes(status, username='@' + me.screen_name)
+image_quotes.makeImage()
 
 # if db.users.count_documents({'id': me.id}, limit=1) == 0:
 #     print("saving user "+me.id_str)

@@ -18,6 +18,9 @@ class ImageQuotes(object):
         draw = ImageDraw.Draw(image)
         width, height = image.size
 
+        bg = Image.new("RGBA", (int(width), int(height)), (0, 0, 0, 127))
+        image.paste(bg, (0, 0), bg)
+
         header = self.draw_header()
         w_header, h_header = header.size
 
@@ -27,7 +30,7 @@ class ImageQuotes(object):
         tot_height += h_header
 
         message = self.tweet.text
-        lines = textwrap.wrap(message, width=100)
+        lines = textwrap.wrap(message, width=50)
 
         image_font = ImageFont.truetype("fonts/Roboto-Bold.ttf", size=95)
 
@@ -42,7 +45,7 @@ class ImageQuotes(object):
         y_text = (height - tot_height) / 2
 
         image.paste(header, (int(x_text), int(y_text)), header)
-        y_text += h_header
+        y_text += h_header + 10
 
         for line in lines:
             w, h = image_font.getsize(line)

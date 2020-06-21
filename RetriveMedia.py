@@ -1,15 +1,13 @@
+import binascii
+import hmac
 import random
 import string
 import time
 import urllib
-import urllib3
-import codecs
-import requests
-import binascii
 from urllib.parse import urlparse
-import hmac
+
+import requests
 from requests_oauthlib import OAuth1Session
-import hashlib
 
 
 def escape(s):

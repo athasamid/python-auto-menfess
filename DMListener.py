@@ -10,18 +10,19 @@ class DMListener(object):
         self.db = db
         self.keys = keys
         self.dbdm = db.directmessage
+        self.user_model = db.users
+        self.status_model = db.statuses
 
     def process_dm(self):
         for dm in self.dms:
             getdm = self.dbdm.find_one({'id': dm.id})
             if getdm is None:
-                print("Inserting new Data")
-                print(dm)
-                self.dbdm.insert_one(self.set_dms(dm))
+                self.save_user(dm.message_create["sender_id"])
+                self.dbdm.insert_one(dm._json)
                 self.check_tweet(dm)
+                print(dm.id_str)
 
     def check_tweet(self, dm):
-        print(self.trigger)
         if dm.message_create['message_data']['text'].lower().startswith(self.trigger.lower()):
             status = dm.message_create['message_data']['text']
             urls = dm.message_create['message_data']['entities']['urls']
@@ -37,8 +38,6 @@ class DMListener(object):
             except KeyError:
                 print('key_error')
 
-            print(id_media)
-
             url = None
             for i in urls:
                 if 'twitter.com' in i['expanded_url']:
@@ -47,7 +46,7 @@ class DMListener(object):
                                 dm.message_create['message_data']['attachment']['media']['url'] != i['url']) else None
 
             updated_status = self.api.update_status(status=status, attachment_url=url, media_ids=id_media)
-            self.db.statuses.insert_one(self.set_status(updated_status, dm.id))
+            self.status_model.insert_one(self.set_status(updated_status, dm.id))
             self.api.send_direct_message(recipient_id=dm.message_create['sender_id'], text="Request anda telah di terbitkan.\nSilahkan cek disini: https://twitter.com/"+self.keys['username'].replace('@', '')+"/status/"+updated_status.id_str)
 
     def download_and_upload_media(self, url, dm_id):
@@ -80,3 +79,9 @@ class DMListener(object):
             'entities': status.entities,
             'in_reply_to_status_id': status.in_reply_to_status_id
         }
+
+    def save_user(self, id):
+        user = self.api.get_user(id)
+        useravailable = self.user_model.find_one({'id': user.id})
+        if useravailable is None:
+            self.user_model.insert_one(user._json)

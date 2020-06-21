@@ -8,17 +8,17 @@ class BotStreamListener(StreamListener):
         self.api = api
         self.db = db
         self.user_model = db.users
-        self.tweet = db.tweet
+        self.status_model = db.status
         self.quotes = db.quotes
 
     def process_data(self, twitter):
-        users = self.db.users
+        self.save_user(twitter.user)
         if any(hashtag['text'] == 'rt' for hashtag in twitter.entities['hashtags']) and twitter.retweeted == False:
             print("found rts")
             if twitter.in_reply_to_status_id is not None:
                 self.do_retweet(twitter.in_reply_to_status_id)
+
             else:
-                print()
                 self.do_retweet(id=twitter.id)
 
         if any(hashtag['text'] == 'quoteimg' for hashtag in twitter.entities['hashtags']):
@@ -38,10 +38,16 @@ class BotStreamListener(StreamListener):
             media = self.api.media_upload(filename='quotes/' + data.id_str + '.jpg')
             print(media)
             print(in_reply_to_status_id)
-            self.api.update_status(media_ids=[media.media_id], in_reply_to_status_id=in_reply_to_status_id,
+            updated_status = self.api.update_status(media_ids=[media.media_id], in_reply_to_status_id=in_reply_to_status_id,
                                    auto_populate_reply_metadata=True)
+            self.status_model.insert_one(updated_status._json)
         except TweepError:
             print("error")
+
+    def save_user(self, user):
+        useravailable = self.user_model.find_one({'id': user.id})
+        if useravailable is None:
+            self.user_model.insert_one(user._json)
 
     def get_me(self):
         try:
@@ -57,13 +63,15 @@ class BotStreamListener(StreamListener):
 
     def do_retweet(self, id: int):
         try:
-            self.api.retweet(id=id)
+            retweeted = self.api.retweet(id=id)
+            self.status_model.insert_one(retweeted._json)
         except TweepError:
             print("error ")
 
     def tweet(self, status):
         try:
-            self.api.update_status(status=status)
+            updated_status = self.api.update_status(status=status)
+            self.status_model.insert_one(updated_status._json)
         except TweepError:
             print("error")
 
@@ -73,3 +81,16 @@ class BotStreamListener(StreamListener):
 
     def on_error(self, status_code):
         print(status_code)
+
+    def save_status(self, status):
+        self.status_model.insert_one(self.set_status(status, None))
+
+    def set_status(self, status, id_dm):
+        return {
+            'id': status.id,
+            'id_dm': id_dm,
+            'created_at': status.created_at,
+            'text': status.text,
+            'entities': status.entities,
+            'in_reply_to_status_id': status.in_reply_to_status_id
+        }

@@ -18,7 +18,7 @@ class ImageQuotes(object):
         # rand = randint(0, len(imagelist) - 1)
         # print(rand)
         rand = randint(1, 50)
-        image = Image.open("images/img"+rand+".jpg")
+        image = Image.open("images/img"+str(rand)+".jpg")
         draw = ImageDraw.Draw(image)
         width, height = image.size
 

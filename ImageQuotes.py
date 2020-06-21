@@ -13,8 +13,9 @@ class ImageQuotes(object):
 
     def makeImage(self):
         imagelist = glob.glob('images/img*.jpg')
-        rand = randint(0, len(imagelist) - 1)
         print(imagelist)
+        print(len(imagelist) - 1)
+        rand = randint(0, len(imagelist) - 1)
         print(rand)
 
         image = Image.open(imagelist[rand])

@@ -6,5 +6,5 @@ _How to use_
 - copy `.env.example` to `.env` and change setting according to your twitter api
 - and run `python3 bot.py` for tweet listener or `python3 directmessagepolling.py` for dm listener
 
-## Todo
+_Todo_
 - Auto send dm message when user follow

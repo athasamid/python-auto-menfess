@@ -3,10 +3,8 @@
 _How to use_
 - I assume python already installed on your machine
 - Install library `pip3 install tweepy pymongo pillow requests requests_oauthlib python-dotenv`
-- copy `.env.example` to `.env`
+- copy `.env.example` to `.env` and change setting according to your twitter api
 - and run `python3 bot.py` for tweet listener or `python3 directmessagepolling.py` for dm listener
 
-
-### Todo
-- Fixing text size in image quote
-- Add more image background
+## Todo
+- Auto send dm message when user follow
